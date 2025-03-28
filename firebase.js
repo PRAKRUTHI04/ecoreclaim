@@ -8,7 +8,6 @@ import {
     onAuthStateChanged,
     sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
-export { app, db, auth };
 
 const firebaseConfig = {
     apiKey: "AIzaSyCPtO-CSuNsHJKKKXW-4oKGIJBsuqW5Irs",
@@ -19,23 +18,24 @@ const firebaseConfig = {
     appId: "1:654961972681:web:2c8d8d6f069cdcbf074418"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 async function saveUserData(user) {
-  if (!user) return;
-
-  const userRef = doc(db, "users", user.uid);
-  await setDoc(userRef, {
-      firstName: user.displayName ? user.displayName.split(" ")[0] : "",
-      lastName: user.displayName ? user.displayName.split(" ")[1] || "" : "",
-      email: user.email,
-      phone: "",
-      country: "",
-      state: "",
-      city: ""
-  }, { merge: true });
+    if (!user) return;
+  
+    const userRef = doc(db, "users", user.uid);
+    await setDoc(userRef, {
+        firstName: user.displayName ? user.displayName.split(" ")[0] : "",
+        lastName: user.displayName ? user.displayName.split(" ")[1] || "" : "",
+        email: user.email,
+        phone: "",
+        country: "",
+        state: "",
+        city: ""
+    }, { merge: true });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 await updateProfile(user, { displayName: name });
 
-                await storeUserData(user.uid, name, email);
+                await saveUserData(user);
 
                 alert("✅ Sign-up successful! Redirecting to login...");
                 window.location.href = "ls.html"; 
@@ -113,3 +113,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+export { app, db, auth };
